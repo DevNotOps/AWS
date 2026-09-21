@@ -80,7 +80,7 @@ download: s3://whoami/main.txt to ./main.txt
 ```
 - delete files form s3 bucket
 ```bash
-aws s3 rm s3://whoami/main.txt
+aws s3 rm  s3://whoami/main.txt
 ```
 ```bash
 delete: s3://whoami/main.txt
