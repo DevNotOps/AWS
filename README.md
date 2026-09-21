@@ -1,107 +1,67 @@
-```bash
- aws account put-contact-information --contact-information '
-{
-"FullName":"jhon adam",
-"PhoneNumber":"201050",
-"AddressLine1":"egypt",
-"City":"behara",
-"PostalCode":"5020",
-"CountryCode":"BE",
-"StateOrRegion":"WA"}'
-```
+# AWS CLI Quick Reference
 
-## 1- create IAM user
-```bash
-aws iam create-user --user-name ahmed --tags Key=Department,Value=HR Key=location,Value=egypt
-```
-### output:
+This README contains a few common AWS CLI commands for managing account information, IAM users, and EC2 instances.
+
+## Prerequisites
+- AWS CLI installed and configured
+- Valid AWS credentials
+- A default region or explicit `--region` in commands
+
+## 1. Update account contact information
 
 ```bash
-{
-    "User": {
-        "Path": "/",
-        "UserName": "ahmed",
-        "UserId": "AIDAK2R13L6CIPPTND9Q",
-        "Arn": "arn:aws:iam::000000000000:user/ahmed",
-        "CreateDate": "2026-09-21T11:38:56.897430+00:00",
-        "Tags": [
-            {
-                "Key": "Department",
-                "Value": "HR"
-            },
-            {
-                "Key": "location",
-                "Value": "egypt"
-            }
-        ]
-    }
-}
+aws account put-contact-information \
+  --contact-information '{
+    "FullName":"John Adam",
+    "PhoneNumber":"201050",
+    "AddressLine1":"Egypt",
+    "City":"Behara",
+    "PostalCode":"5020",
+    "CountryCode":"BE",
+    "StateOrRegion":"WA"
+  }'
 ```
 
-## 5- EC2 
-- create EC2 key pair
- ```bash
- aws ec2 create-key-pair --keyname keyname --quiry 'KeyMaterial' --output text | tee key.pam
-```
-- lanche ec2
+## 2. Create an IAM user
+
 ```bash
-aws ec2 run-instances --image-id ami-0123456789abcdef0 --instance-type t2.micro --key-name user.pem --region eu-west-2
+aws iam create-user \
+  --user-name ahmed \
+  --tags Key=Department,Value=HR Key=location,Value=egypt
 ```
 
-## 6- s3
+Expected output includes a `User` object with the username, ARN, and tags.
 
-- create bucket
+## 3. Create an EC2 key pair
+
 ```bash
-aws s3 mb s3://bucket_name
+aws ec2 create-key-pair \
+  --key-name my-key \
+  --query 'KeyMaterial' \
+  --output text > my-key.pem
+
+chmod 400 my-key.pem
 ```
+
+This saves the private key to `my-key.pem` and restricts permissions so it is not readable by other users.
+
+## 4. Launch an EC2 instance
+
 ```bash
-make_bucket: bucket_name
+aws ec2 run-instances \
+  --image-id ami-0123456789abcdef0 \
+  --instance-type t2.micro \
+  --key-name my-key \
+  --region eu-west-2
 ```
-- list s3 buckets
+
+## 5. Verify the instance
+
 ```bash
-aws s3 ls
+aws ec2 describe-instances --region eu-west-2
 ```
-```bash
-2026-09-22 00:19:56 whoami
-```
-- upload file to s3 bucket
-```bash
-aws s3 cp file_name s3://bucket_name/file_name
-```
-```bash
-upload: ./main.txt to s3://bucket_name/file_name
-```
-- download files from s3 bucket
-```bash
-aws s3 cp  s3://whoami/main.txt main.txt
-```
-```bash
-download: s3://whoami/main.txt to ./main.txt
-```
-- delete files form s3 bucket
-```bash
-aws s3 rm  s3://whoami/main.txt
-```
-```bash
-delete: s3://whoami/main.txt
-```
-- list s3 bucket contant
-```bash
-s3 ls s3://bucket_name
-```
-```bash
-2026-09-22 00:32:41         14 main.txt
-```
-- delete all files in s3 bucket
-```bash
-aws s3 rm s3://whoami --recursive
-```
-- delete s3 bucket
-### if bucket is empty
-```bash
-aws s3 rb s3://bucket_name
-```
-### if not empty
-```bash
-aws s3 rb s3://whoami --force
-```
+
+## Notes
+- Replace example values with your own AWS account data.
+- Use `--profile <profile-name>` if you are not using the default AWS profile.
+- Always store private keys securely and avoid committing them to source control.
