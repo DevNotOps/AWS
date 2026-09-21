@@ -10,7 +10,35 @@
 "StateOrRegion":"WA"}'
 ```
 
-## 1- EC2 
+## 1- create IAM user
+```bash
+aws iam create-user --user-name ahmed --tags Key=Department,Value=HR Key=location,Value=egypt
+```
+### output:
+
+```bash
+{
+    "User": {
+        "Path": "/",
+        "UserName": "ahmed",
+        "UserId": "AIDAK2R13L6CIPPTND9Q",
+        "Arn": "arn:aws:iam::000000000000:user/ahmed",
+        "CreateDate": "2026-09-21T11:38:56.897430+00:00",
+        "Tags": [
+            {
+                "Key": "Department",
+                "Value": "HR"
+            },
+            {
+                "Key": "location",
+                "Value": "egypt"
+            }
+        ]
+    }
+}
+```
+
+## 5- EC2 
 - create EC2 key pair
  ```bash
  aws ec2 create-key-pair --keyname keyname --quiry 'KeyMaterial' --output text | tee key.pam
