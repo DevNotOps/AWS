@@ -1,18 +1,21 @@
 ```bash
- aws account put-contact-information --contact-information '
-{
-"FullName":"jhon adam",
-"PhoneNumber":"201050",
-"AddressLine1":"egypt",
-"City":"behara",
-"PostalCode":"5020",
-"CountryCode":"BE",
-"StateOrRegion":"WA"}'
+ aws account put-contact-information \
+--contact-information '{ \
+"FullName":"jhon adam", \
+"PhoneNumber":"201050", \
+"AddressLine1":"egypt", \
+"City":"behara", \
+"PostalCode":"5020", \
+"CountryCode":"BE", \
+"StateOrRegion":"WA" \
+}'
 ```
-
-## 1- create IAM user
+---------------------------------------------------------------------------------------------------------------------
+1- create IAM user
 ```bash
-aws iam create-user --user-name ahmed --tags Key=Department,Value=HR Key=location,Value=egypt
+aws iam create-user \
+--user-name ahmed \
+--tags Key=Department,Value=HR Key=location,Value=egypt
 ```
 ### output:
 
@@ -37,18 +40,28 @@ aws iam create-user --user-name ahmed --tags Key=Department,Value=HR Key=locatio
     }
 }
 ```
+----------------------------------------------------------------------------------------------------------------------
 
-## 5- EC2 
+5- EC2 
 - create EC2 key pair
  ```bash
- aws ec2 create-key-pair --keyname keyname --quiry 'KeyMaterial' --output text | tee key.pam
-```
-- lanche ec2
-```bash
-aws ec2 run-instances --image-id ami-0123456789abcdef0 --instance-type t2.micro --key-name user.pem --region eu-west-2
+ aws ec2 create-key-pair \
+--keyname keyname \
+--quiry 'KeyMaterial'
+--output text | tee key.pam
 ```
 
-## 6- s3
+- lanche ec2
+
+```bash
+aws ec2 run-instances \
+--image-id ami-0123456789abcdef0 \
+--instance-type t2.micro \
+--key-name user.pem \
+--region eu-west-2
+```
+-----------------------------------------------------------------------------------------------------------------------
+6- s3
 
 - create bucket
 ```bash
@@ -104,4 +117,16 @@ aws s3 rb s3://bucket_name
 ### if not empty
 ```bash
 aws s3 rb s3://whoami --force
+```
+-------------------------------------------------------------------------------------------------------------------------
+7. Databases
+
+```bash
+aws rds create-db-instance \
+--db-instance-identifier db_name \
+--db-instance-class machine_type \
+--master-username db_username \
+--master-user-password db_password \
+--engine db_type \
+--allocated-storage db_storage_size
 ```
